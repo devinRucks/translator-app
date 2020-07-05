@@ -1,32 +1,31 @@
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import { useState, useEffect } from 'react';
+import { StyleSheet, Image, TouchableOpacity, Text } from 'react-native';
+import { View } from '../components/Themed';
+import SelectImage from '../components/SelectImage';
+import SelectLanguages from '../components/SelectLanguages';
+import Translation from '../components/Translation';
 
-import EditScreenInfo from '../components/EditScreenInfo';
-import { Text, View } from '../components/Themed';
+const TabOneScreen = () => {
 
-export default function TabOneScreen() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="/screens/TabOneScreen.tsx" />
-    </View>
-  );
+
+	return (
+		<View style={styles.container}>
+			<SelectLanguages />
+			<SelectImage />
+			<Translation />
+		</View>
+	);
 }
 
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
+	container: {
+		flex: 1,
+		justifyContent: 'space-evenly',
+		borderColor: 'red',
+		borderWidth: 5
+	},
 });
+
+export default TabOneScreen;
