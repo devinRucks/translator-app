@@ -1,14 +1,20 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { observer } from 'mobx-react-lite';
+
+// Attempt to solve warning from mobx
+import 'mobx-react-lite/batchingForReactDom'
+
+import { useEffect, useContext } from 'react';
 import { StyleSheet, Image, TouchableOpacity, Text } from 'react-native';
 
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 import { View } from '../components/Themed';
+import { ImageStoreContext } from '../stores/ImageStore';
 
-const SelectImage = () => {
-     const [image, setImage] = useState('');
+const SelectImage = observer(() => {
+     const ImageStore = useContext(ImageStoreContext)
 
      useEffect(() => {
           getPermissionsAsync();
@@ -32,7 +38,7 @@ const SelectImage = () => {
                     quality: 1,
                });
                if (!result.cancelled) {
-                    setImage(result.uri);
+                    ImageStore.imageURI = result;
                }
 
                console.log(result);
@@ -43,7 +49,7 @@ const SelectImage = () => {
 
      return (
           <View style={styles.container}>
-               {image !== '' && <Image source={{ uri: image }} style={styles.imageContainer} />}
+               {ImageStore.imageURI !== '' && <Image source={{ uri: ImageStore.imageURI }} style={styles.imageContainer} />}
                <TouchableOpacity
                     style={styles.imageSelect}
                     onPress={() => pickImage()}>
@@ -51,7 +57,7 @@ const SelectImage = () => {
                </TouchableOpacity>
           </View>
      );
-}
+})
 
 
 const styles = StyleSheet.create({
@@ -59,8 +65,8 @@ const styles = StyleSheet.create({
           flex: 2,
           alignItems: 'center',
           justifyContent: 'flex-end',
-          borderColor: 'green',
-          borderWidth: 2
+          // borderColor: 'green',
+          // borderWidth: 2
      },
      imageSelect: {
           marginRight: 40,

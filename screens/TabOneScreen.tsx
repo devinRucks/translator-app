@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
-import { StyleSheet, Image, TouchableOpacity, Text } from 'react-native';
+// import { useEffect, useContext } from 'react';
+import { StyleSheet } from 'react-native';
 import { View } from '../components/Themed';
 import SelectImage from '../components/SelectImage';
 import SelectLanguages from '../components/SelectLanguages';
