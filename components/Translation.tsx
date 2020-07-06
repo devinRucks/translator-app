@@ -11,22 +11,34 @@ import * as tf from '@tensorflow/tfjs';
 
 const Translation = observer(() => {
      const ImageStore = useContext(ImageStoreContext)
-     const [model, setModel] = useState({})
-     const [predictions, setPredictions] = useState({})
+     const [prediction, setPrediction] = useState('')
 
-     useEffect(() => {
-          setModel(cocoSsd.load()); // preparing COCO-SSD model
-     }, [])
+     // useEffect(() => {
+     //      detectObjects();
+     // }, [])
 
      const detectObjects = async () => {
-          try {
-               const imageAssetPath = Image.resolveAssetSource(ImageStore.imageURI)
-               const response = await fetch(imageAssetPath.uri, {}, { isBinary: true })
-               const rawImageData = await response.arrayBuffer()
-               const imageTensor = imageToTensor(rawImageData)
-               setPredictions(await model.detect(imageTensor))
-          } catch (error) {
-               console.log('Exception Error: ', error)
+          // If an image has been selected, run detectObects();
+          if (ImageStore.imageURI !== '') {
+               try {
+                    const response = await fetch(ImageStore.imageURI, {}, { isBinary: true })
+                    const rawImageData = await response.arrayBuffer()
+
+                    await tf.ready();
+
+                    const imageTensor = imageToTensor(rawImageData)
+                    console.log(imageTensor)
+
+                    cocoSsd.load().then(async (model) => {
+                         model.detect(imageTensor).then((prediction: any) => {
+                              console.log(prediction)
+                              setPrediction(prediction[0].class);
+                         })
+                    })
+
+               } catch (error) {
+                    console.log('Exception Error: ', error)
+               }
           }
      }
 
@@ -45,18 +57,14 @@ const Translation = observer(() => {
           return tf.tensor3d(buffer, [height, width, 3])
      }
 
-     // If an image has been selected, run detectObects();
-     if (Object.keys(ImageStore.imageURI).length !== 0) {
-          detectObjects();
-     }
 
-     // const renderPrediction = (prediction, index) => {
-     //      const pclass = prediction.class;
-     //      const score = prediction.score;
-     //      const x = prediction.bbox[0];
-     //      const y = prediction.bbox[1];
-     //      const w = prediction.bbox[2];
-     //      const h = prediction.bbox[3];
+     // const renderPrediction = () => {
+     //      const pclass = predictions.class;
+     //      const score = predictions.score;
+     //      const x = predictions.bbox[0];
+     //      const y = predictions.bbox[1];
+     //      const w = predictions.bbox[2];
+     //      const h = predictions.bbox[3];
      //      return (
      //           <View style={styles.welcomeContainer}>
      //                <Text key={index} style={styles.text}>
@@ -70,9 +78,10 @@ const Translation = observer(() => {
           <View style={styles.container}>
                <TouchableOpacity
                     style={styles.translateBtn}
-                    onPress={() => objectDetection()}>
+                    onPress={() => detectObjects()}>
                     <Text style={styles.translateBtnTxt}>Go!</Text>
                </TouchableOpacity>
+               <Text style={styles.predictionTxt}>{prediction}</Text>
           </View>
      );
 });
@@ -97,6 +106,10 @@ const styles = StyleSheet.create({
      translateBtnTxt: {
           color: '#000000',
           fontSize: 20
+     },
+     predictionTxt: {
+          color: '#FFFFFF',
+          fontSize: 30
      }
 });
 

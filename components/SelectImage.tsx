@@ -38,7 +38,7 @@ const SelectImage = observer(() => {
                     quality: 1,
                });
                if (!result.cancelled) {
-                    ImageStore.imageURI = result;
+                    ImageStore.imageURI = result.uri;
                }
 
                console.log(result);
@@ -49,7 +49,7 @@ const SelectImage = observer(() => {
 
      return (
           <View style={styles.container}>
-               {ImageStore.imageURI !== '' && <Image source={{ uri: ImageStore.imageURI }} style={styles.imageContainer} />}
+               {Object.keys(ImageStore.imageURI).length !== 0 && <Image source={{ uri: ImageStore.imageURI }} style={styles.imageContainer} />}
                <TouchableOpacity
                     style={styles.imageSelect}
                     onPress={() => pickImage()}>
