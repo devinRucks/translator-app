@@ -11,10 +11,12 @@ import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 import { View } from '../components/Themed';
-import { ImageStoreContext } from '../stores/ImageStore';
+import { PredictionsStoreContext } from '../stores/PredictionsStore';
+import detectObjects from '../helpers/TensorFlow';
 
 const SelectImage = observer(() => {
-     const ImageStore = useContext(ImageStoreContext)
+     const PredictionsStore = useContext(PredictionsStoreContext)
+     let imageURI = '';
 
      useEffect(() => {
           getPermissionsAsync();
@@ -38,7 +40,8 @@ const SelectImage = observer(() => {
                     quality: 1,
                });
                if (!result.cancelled) {
-                    ImageStore.imageURI = result.uri;
+                    imageURI = result.uri;
+                    PredictionsStore.predictions = await detectObjects(result.uri)
                }
 
                console.log(result);
@@ -49,7 +52,7 @@ const SelectImage = observer(() => {
 
      return (
           <View style={styles.container}>
-               {Object.keys(ImageStore.imageURI).length !== 0 && <Image source={{ uri: ImageStore.imageURI }} style={styles.imageContainer} />}
+               {Object.keys(imageURI).length !== 0 && <Image source={{ uri: imageURI }} style={styles.imageContainer} />}
                <TouchableOpacity
                     style={styles.imageSelect}
                     onPress={() => pickImage()}>
