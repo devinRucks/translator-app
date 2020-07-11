@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite';
 // Attempt to solve warning from mobx
 import 'mobx-react-lite/batchingForReactDom'
 
-import { useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { StyleSheet, Image, TouchableOpacity, Text } from 'react-native';
 
 import * as ImagePicker from 'expo-image-picker';
@@ -16,7 +16,7 @@ import detectObjects from '../helpers/TensorFlow';
 
 const SelectImage = observer(() => {
      const PredictionsStore = useContext(PredictionsStoreContext)
-     let imageURI = '';
+     const [imageURI, setImageURI] = useState(" ");
 
      useEffect(() => {
           getPermissionsAsync();
@@ -40,7 +40,7 @@ const SelectImage = observer(() => {
                     quality: 1,
                });
                if (!result.cancelled) {
-                    imageURI = result.uri;
+                    setImageURI(result.uri);
                     PredictionsStore.predictions = await detectObjects(result.uri)
                }
 
