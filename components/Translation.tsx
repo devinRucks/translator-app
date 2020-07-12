@@ -5,13 +5,15 @@ import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { View } from '../components/Themed';
 import TranslationTextBoxes from '../components/TranlationTextBoxes';
 import { PredictionsStoreContext } from '../stores/PredictionsStore';
+import translateText from '../helpers/Translate';
+
 
 
 const Translation = observer(() => {
      const PredictionsStore = useContext(PredictionsStoreContext)
 
-     const translate = () => {
-
+     const translate = async () => {
+          await translateText();
      }
 
      return (

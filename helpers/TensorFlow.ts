@@ -2,7 +2,6 @@ import jpeg from 'jpeg-js';
 import { fetch } from '@tensorflow/tfjs-react-native';
 import * as cocoSsd from '@tensorflow-models/coco-ssd';
 import * as tf from '@tensorflow/tfjs';
-import { PredictionsStoreContext } from '../stores/PredictionsStore';
 
 const detectObjects = async (imageLink: string): Promise<Array<Object>> => {
      return new Promise<Array<Object>>(async (resolve) => {
